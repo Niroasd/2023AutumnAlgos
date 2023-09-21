@@ -263,31 +263,32 @@ class IntArray():
         return val
     
     def insert(self, index:int, val:int) -> None:
-        ### Remove this comment and the `return` line and write your code here!
-        # if not isinstance(index, int):
-        #     raise ValueError('Value must be positive integer > 0.')
-        # elif index <= 0:
-        #     raise ValueError('Value must be positive integer > 0.')
-        # if not isinstance(val, int) or not self._min_val <= val <= self._max_val:
-        #     raise TypeError('Value must be an integer between {self._min_val} and {self._max_val}')
+        if not isinstance(index, int):
+            raise ValueError('Index must be positive integer > 0.')
+        elif index < 0:
+            raise ValueError('Index must be positive integer >= 0.')
+        elif index >= self._size:
+            raise ValueError(f'Index must be within array bounds. currently: {self._size - 1}')
+        if not isinstance(val, int) or not self._min_val <= val <= self._max_val:
+            raise TypeError(f'Value must be an integer between {self._min_val} and {self._max_val}')
         
+        #debug
+        # for i in range(5):
+        #     print(self._resmem.__getitem__(i*self._bytes_per_element))
+
+        self._tempVal = self._resmem.__getitem__(index*self._bytes_per_element)
 
         self._size += 1
+        
         new_resmem = ReservedMemory(self._size*self._bytes_per_element)
-        #kasvatetaan kokoa yhdellä koska insertataan
 
         if self._resmem:
             new_resmem.copy(self._resmem)
 
         self._resmem = new_resmem
 
-        self._tempVal = self._resmem.__getitem__(index)
-
-
         self.__setitem__(index, val)
-        self.__setitem__(index+1, self._tempVal)
-
-        
+        self.__setitem__(index + 1, self._tempVal)
 
         return
 
@@ -299,3 +300,49 @@ for i in range(6):
 array.insert(5, 10)
 print(array._tempVal)
 print(array)
+
+#ei toimi viel
+	
+# array = IntArray()
+# for i in range(6):
+#     array.append(i)
+# print(len(array))
+# 6
+# 6
+
+# array = IntArray()
+# for i in range(6):
+#     array.append(i)
+# array.insert(5, 10)
+# print(array)
+
+# 	Expected
+# IntArray (7 elements): [0, 1, 2, 3, 4, 10, 5]
+# 	Got
+# IntArray (7 elements): [0, 1, 2, 3, 4, 10, 5]
+# array = IntArray()
+# for i in range(6):
+#     array.append(i)
+# array.insert(0,20)
+# print(array)
+
+# 	Expected
+# IntArray (7 elements): [20, 0, 1, 2, 3, 4, 5]
+# 	Got
+# IntArray (7 elements): [20, 0, 2, 3, 4, 5, -32768]
+# array = IntArray()
+# for i in range(6):
+#     array.append(i)
+# array.insert(6,30)
+# print(array)
+
+# 	Expected
+# IntArray (7 elements): [0, 1, 2, 3, 4, 5, 30]
+# 	Got
+# ***Run error***
+# Traceback (most recent call last):
+#   File "__tester__.python3", line 596, in <module>
+#     array.insert(6,30)
+#   File "__tester__.python3", line 271, in insert
+#     raise ValueError(f'Index must be within array bounds. currently: {self._size - 1}')
+# ValueError: Index must be within array bounds. currently: 5
