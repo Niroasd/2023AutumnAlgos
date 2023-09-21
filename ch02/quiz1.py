@@ -271,11 +271,9 @@ class IntArray():
             raise ValueError(f'Index must be within array bounds. currently: {self._size - 1}')
         if not isinstance(val, int) or not self._min_val <= val <= self._max_val:
             raise TypeError(f'Value must be an integer between {self._min_val} and {self._max_val}')
-        
         #debug
         # for i in range(5):
         #     print(self._resmem.__getitem__(i*self._bytes_per_element))
-
         self._tempVal = self._resmem.__getitem__(index*self._bytes_per_element)
 
         self._size += 1
@@ -283,22 +281,28 @@ class IntArray():
         new_resmem = ReservedMemory(self._size*self._bytes_per_element)
 
         if self._resmem:
-            new_resmem.copy(self._resmem)
-
-        self._resmem = new_resmem
+            new_resmem.copy(self._resmem, count=(self._size - 1)*self._bytes_per_element)
 
         self.__setitem__(index, val)
         self.__setitem__(index + 1, self._tempVal)
 
+        for i in range(self._size-1):
+            self.__setitem__(index + i, self._resmem.__getitem__(i*self._bytes_per_element))
+
+
         return
 
+
+# array = IntArray()
+# for i in range(6):
+#     array.append(i)
+# array.insert(5, 10)
+# print(array)
 
 array = IntArray()
 for i in range(6):
     array.append(i)
-
-array.insert(5, 10)
-print(array._tempVal)
+array.insert(0,20)
 print(array)
 
 #ei toimi viel
