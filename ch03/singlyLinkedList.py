@@ -132,5 +132,10 @@ class SinglyLinkedList():
         Returns: The value of the node being removed
         """
         
-        # YOUR CODE HERE. Remove the next line also
+        # Check if index is inside bounds
+        if index < 0 or index > self._size:
+            raise(ValueError('Index out of bounds'))
+        
+        self._size -= 1
+
         return
