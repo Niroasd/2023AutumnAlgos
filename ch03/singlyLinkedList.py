@@ -18,7 +18,7 @@ class SinglyLinkedList():
             values += f', {current_node.data}'
             current_node = current_node.next
         plural = '' if self._size == 1 else 's'
-        return f'<SinglyLinkedList: (contains {self._size} element{plural}): [{values.lstrip(", ")}]>'
+        return f'<SinglyLinkedList ({self._size} element{plural}): [{values.lstrip(", ")}]>'
     
     def __len__(self):
         return self._size
@@ -56,14 +56,15 @@ class SinglyLinkedList():
             val = self._head.data
             del self._head
             self._head = None
+            self._size -= 1
             return val
 
         
         current_node = self._head
         val = self._tail.data
         
-        valueToDelete = self._tail
-        del(valueToDelete)
+        
+        
 
         while current_node.next != None:
             secondLast = current_node
@@ -71,14 +72,65 @@ class SinglyLinkedList():
 
 
         
+        
+        valueToDelete = self._tail
+        del(valueToDelete)
         self._tail = secondLast
+        self._tail.next = None
+        self._size -= 1
+
 
         return val
 
-list = SinglyLinkedList()
-for i in 'abcfkgdgm':
-    list.append(i)
+    def insert(self, index, value):
+        """
+        Insert a new node with value in the position given by the index
 
-print(list._tail.data)
-val = list.pop()
-print(val, list)
+        Parameters:
+        - 'index': The position where to insert the new node
+        - 'value': The value of the new node
+
+        Returns: None
+        """
+        # Check if index is inside bounds
+        if index < 0 or index > self._size:
+            raise(ValueError('Index out of bounds'))
+
+        # Prepare some variables to make the necessary changes
+        # The new node will be inserted between previous_node and next_node
+        previous_node = None
+        next_node = self._head
+        # Move to the given index and update pointer variables
+        for _ in range(index):
+            previous_node = next_node
+            next_node = next_node.next
+
+        # Create new node. It's next pointer points to next node or None
+        new_node = ListNode(value, next_node)
+
+        # If insert at front, update head
+        if previous_node is None:
+            self._head = new_node
+        else:
+            # If not, update previous node
+            previous_node.next = new_node
+        
+        # If insert at the end, update tail
+        if previous_node == self._tail:
+            self._tail = new_node
+
+        # Update list size
+        self._size += 1
+
+    def remove(self, index):
+        """
+        Remove a new node from the position given by the index
+
+        Parameters:
+        - 'index': The position where to insert the new node
+
+        Returns: The value of the node being removed
+        """
+        
+        # YOUR CODE HERE. Remove the next line also
+        return
